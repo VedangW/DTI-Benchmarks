@@ -13,8 +13,8 @@ warnings.filterwarnings('ignore')
 # Create argument parser
 parser = argparse.ArgumentParser(description='Test EnsemDT')
 
-parser.add_argument('-p', '--path', type=str, 
-					default='data/graph_2.pkl',
+parser.add_argument('-d', '--dataset', type=str, 
+					default='data_2_small',
                     help='Set path to data')
 parser.add_argument('-m', '--max_depth', type=int, default=0,
                     help='Max depth for base learners')
@@ -22,13 +22,27 @@ parser.add_argument('-m', '--max_depth', type=int, default=0,
 args = parser.parse_args()
 
 # Gather hyperparameters
-DATA_PATH = args.path
+DATASET = args.path
 MAX_DEPTH = args.max_depth
 
 if MAX_DEPTH == 0:
 	MAX_DEPTH = None
 elif MAX_DEPTH < 0:
 	raise ValueError("Max depth must be greater than 0.")
+
+options = ['data_1', 'data_2', 'data_1_small', 'data_2_small']
+
+if DATASET not in options:
+	raise ValueError('Invalid dataset.')
+
+if DATASET == 'data_1':
+	DATA_PATH = 'data/data_1/data_1.pkl'
+elif DATASET == 'data_2':
+	DATA_PATH = 'data/data_2/data_2.pkl'
+elif DATASET == 'data_2_small':
+	DATA_PATH = 'data/data_2_small/graph_2.pkl'
+else:
+	raise NotImplementedError('Pipeline not implemented.')
 
 # Load data
 df_pos, df_neg, df_u, df_v = load_data_ensemdt(DATA_PATH)
