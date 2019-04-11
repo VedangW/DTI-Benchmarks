@@ -4,6 +4,7 @@ from __future__ import print_function
 import os
 import time
 import pickle
+import argparse
 import numpy as np
 import networkx as nx
 import tensorflow as tf
@@ -11,6 +12,29 @@ import scipy.sparse as sp
 
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import average_precision_score
+
+# Argument parser
+parser = argparse.ArgumentParser(description='Options for VGAE')
+parser.add_argument('-d', '--dataset', type=str, default='data_2_small',
+                    help='Name of dataset to use.')
+
+args = parser.parse_args()
+
+DATASET = args.dataset
+
+options = ['data_1', 'data_2', 'data_1_small', 'data_2_small']
+
+if DATASET not in options:
+	raise ValueError('Invalid dataset.')
+
+if DATASET == 'data_1':
+	DATA_PATH = 'data/data_1/data_1.pkl'
+elif DATASET == 'data_2':
+	DATA_PATH = 'data/data_2/data_2.pkl'
+elif DATASET == 'data_2_small':
+	DATA_PATH = 'data/data_2_small/graph_2.pkl'
+else:
+	raise NotImplementedError('Pipeline not implemented.')
 
 ## Utility Functions
 
@@ -345,8 +369,7 @@ class InnerProductDecoder():
 
 
 
-
-with open('data/data_2_small/graph_2.pkl') as f:
+with open(DATA_PATH) as f:
 	graph = pickle.load(f)
 	
 u_nodes, v_nodes, ratings = graph[2], graph[3], graph[4]
